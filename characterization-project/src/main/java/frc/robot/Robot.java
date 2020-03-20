@@ -5,7 +5,7 @@
  * autonomousPeriodic function and change the NetworkTables update rate
  */
 
-package dc;
+package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
