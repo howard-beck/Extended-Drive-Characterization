@@ -233,12 +233,6 @@ public class Robot extends TimedRobot {
         t++;
         t %= modulus;
 
-        // command motors to do things
-        drive.tankDrive(
-            (rotateEntry.getBoolean(false) ? -1 : 1) * autospeed, autospeed,
-            false
-        );
-
         index = 0;
 
         // send telemetry data array back to NT
