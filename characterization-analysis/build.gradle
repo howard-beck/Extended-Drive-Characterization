@@ -1,0 +1,8 @@
+plugins {
+    id "java"
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.6'
+    compile "org.ejml:ejml-all:0.37.1"
+}
