@@ -223,6 +223,15 @@ public class Robot extends TimedRobot {
         add(numberArray, battery);
         add(numberArray, autospeed);
 
+        add(numberArray, getYaw_rad());
+        add(numberArray, getYawRate_raw_radps());
+        add(numberArray, getYawRate_processed_radps());
+
+        add(numberArray, getAccX_raw_mps2());
+        add(numberArray, getAccX_processed_mps2());
+        add(numberArray, getAccY_raw_mps2());
+        add(numberArray, getAccY_processed_mps2());
+
         for (int i = 0; i < leftMotors.length; i++) {
             add(numberArray, getLeftPosition_m(leftMotors[i]));
             add(numberArray, getLeftVelocity_mps(leftMotors[i]));
@@ -238,15 +247,6 @@ public class Robot extends TimedRobot {
             add(numberArray, rightMotors[i].getStatorCurrent());
             add(numberArray, rightMotors[i].getSupplyCurrent());
         }
-
-        add(numberArray, getYaw_rad());
-        add(numberArray, getYawRate_raw_radps());
-        add(numberArray, getYawRate_processed_radps());
-
-        add(numberArray, getAccX_raw_mps2());
-        add(numberArray, getAccX_processed_mps2());
-        add(numberArray, getAccY_raw_mps2());
-        add(numberArray, getAccY_processed_mps2());
 
         telemetryEntry.setNumberArray(numberArray);
     }
