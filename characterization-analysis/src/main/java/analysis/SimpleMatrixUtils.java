@@ -8,6 +8,8 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+package analysis;
+
 import java.util.function.BiFunction;
 
 import org.ejml.dense.row.NormOps_DDRM;
