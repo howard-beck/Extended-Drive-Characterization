@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
     private NetworkTableEntry rotateEntry = NetworkTableInstance.getDefault().getEntry("/robot/rotate");
 
     double priorAutospeed = 0;
-    Number[] numberArray = new Number[10 + 6*4];
+    Number[] numberArray = new Number[10 + 5*4];
 
     AHRS navx;
 
@@ -227,7 +227,6 @@ public class Robot extends TimedRobot {
             add(numberArray, getLeftPosition_m(leftMotors[i]));
             add(numberArray, getLeftVelocity_mps(leftMotors[i]));
             add(numberArray, leftMotors[i].getMotorOutputVoltage());
-            add(numberArray, leftMotors[i].getOutputCurrent());
             add(numberArray, leftMotors[i].getStatorCurrent());
             add(numberArray, leftMotors[i].getSupplyCurrent());
         }
@@ -236,7 +235,6 @@ public class Robot extends TimedRobot {
             add(numberArray, getRightPosition_m(rightMotors[i]));
             add(numberArray, getRightVelocity_mps(rightMotors[i]));
             add(numberArray, rightMotors[i].getMotorOutputVoltage());
-            add(numberArray, rightMotors[i].getOutputCurrent());
             add(numberArray, rightMotors[i].getStatorCurrent());
             add(numberArray, rightMotors[i].getSupplyCurrent());
         }
