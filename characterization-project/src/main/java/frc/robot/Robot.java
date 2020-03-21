@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
@@ -192,6 +193,12 @@ public class Robot extends TimedRobot {
         index++;
     }
 
+    // "clock" for when to change commanded voltages
+    int t = 0;
+    double voltageUpdateHz = 2.5;
+    // at what t to reset the clock and change the voltages
+    int modulus = (int) (50.0 / voltageUpdateHz);
+
     /**
      * If you wish to just use your own robot program to use with the data logging
      * program, you only need to copy/paste the logic below into your code and
@@ -209,6 +216,22 @@ public class Robot extends TimedRobot {
         // Retrieve the commanded speed from NetworkTables
         double autospeed = autoSpeedEntry.getDouble(0);
         priorAutospeed = autospeed;
+
+        // command random voltages to both sides of the motors
+        // this is in order to get completely uncorrelated data
+        // however, in order to accurately determine the physics
+        // it's better to have the control not change too rapidly
+        // so instead do it at the frequency specified by
+        // the field voltageUpdateHz
+        // 50/voltageUpdateHz determines the number of samples per
+        // set of voltages, it's probably best to have
+        // between 10-20 samples to determine the step response
+        if (t == 0) {
+            leftMotors[0].set(ControlMode.PercentOutput, 2*Math.random() - 1);
+            rightMotors[0].set(ControlMode.PercentOutput, 2*Math.random() - 1);
+        }
+        t++;
+        t %= modulus;
 
         // command motors to do things
         drive.tankDrive(
