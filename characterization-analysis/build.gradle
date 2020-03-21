@@ -27,9 +27,11 @@ dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 
+    // Gson to read JSON files from characterization
     implementation 'com.google.code.gson:gson:2.8.6'
+    // EJML to simplify calculations with matrix math
     compile group: 'org.ejml', name: 'ejml-all', version: '0.38'
 }
 
 // Define the main class for the application
-mainClassName = 'analysis.App'
+mainClassName = 'analysis.Analyze'
