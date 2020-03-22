@@ -43,11 +43,19 @@ public class CharacterizationData {
 
         double numMotors = (data.length - 10)/5.0;
 
-        if (numMotors != (int) numMotors) {
-            return;
-        }
+        if (numMotors != (int) numMotors || numMotors % 2 != 0) {
+            leftPositions = new double[0];
+            leftVelocities = new double[0];
+            leftVolts = new double[0];
+            leftStatorCurrents = new double[0];
+            leftOutputCurrents = new double[0];
 
-        if (numMotors % 2 != 0) {
+            rightPositions = new double[0];
+            rightVelocities = new double[0];
+            rightVolts = new double[0];
+            rightStatorCurrents = new double[0];
+            rightOutputCurrents = new double[0];
+
             return;
         }
 
