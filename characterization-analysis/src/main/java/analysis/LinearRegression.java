@@ -5,7 +5,13 @@ import org.ejml.dense.row.linsol.svd.SolvePseudoInverseSvd_DDRM;
 import org.ejml.simple.SimpleMatrix;
 
 public class LinearRegression {
-    public static SimpleMatrix solve(SimpleMatrix X, SimpleMatrix Y, boolean useIntercept) {
+    private SimpleMatrix B;
+    private double yAvg;
+    private double R2;
+
+
+
+    public LinearRegression(SimpleMatrix X, SimpleMatrix Y, boolean useIntercept) {
         SimpleMatrix x;
 
         if (useIntercept) {
@@ -24,10 +30,27 @@ public class LinearRegression {
         solver.setA(X.getMatrix());
         solver.solve(Y.getMatrix(), solution);
 
-        return new SimpleMatrix(solution);
+        B = new SimpleMatrix(solution);
+
+        yAvg = Y.elementSum() / Y.numRows();
+
+        double SStot = 0;
+        double SSreg = 0;
+
+        for (int i = 0; i < Y.numRows(); i++) {
+            SStot += Math.pow(Y.get(i) - yAvg, 2);
+            SSreg += Math.pow(x.extractVector(true, i).dot(B) - yAvg, 2);
+        }
+
+        R2 = SSreg / SStot;
     }
 
-    public static SimpleMatrix solve(SimpleMatrix X, SimpleMatrix Y) {
-        return solve(X, Y, false);
+    public LinearRegression(SimpleMatrix X, SimpleMatrix Y) {
+        this(X, Y, false);
     }
+
+
+
+    public SimpleMatrix getSolution() { return B; }
+    public double getR2() { return R2; }
 }
