@@ -31,6 +31,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     // EJML to simplify calculations with matrix math
     compile group: 'org.ejml', name: 'ejml-all', version: '0.38'
+    // Jeigen to calculate matrix logarithms and convert back to EJML, which doesn't have them
+    implementation fileTree('lib') { include '*.jar' }
 }
 
 // Define the main class for the application

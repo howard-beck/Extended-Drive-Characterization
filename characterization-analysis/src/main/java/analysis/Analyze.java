@@ -28,9 +28,9 @@ public class Analyze {
 
 
         // new speeds are a linear combination of previous speeds and voltages
-        // variables = vLs, VLs, vRs, VRs, + kinetic friction from each motor
+        // variables = vLs, VLs, vRs, VRs, + kinetic friction from each side
         int motorsPerSide = data.get(0).leftPositions.length;
-        SimpleMatrix Xs_v = new SimpleMatrix(data.size() - 1, 6*motorsPerSide);
+        SimpleMatrix Xs_v = new SimpleMatrix(data.size() - 1, 2*2*motorsPerSide + 2);
         SimpleMatrix[] Y_left = new SimpleMatrix[motorsPerSide];
         SimpleMatrix[] Y_right = new SimpleMatrix[motorsPerSide];
 
@@ -40,14 +40,15 @@ public class Analyze {
         }
 
         for (int i = 0; i < data.size() - 1; i++) {
-            for (int j = 0; j < motorsPerSide; j++) {
-                Xs_v.set(i, 3*j + 1, data.get(i).leftVelocities[j]);
-                Xs_v.set(i, 3*j + 1, data.get(i).leftVolts[j]);
-                Xs_v.set(i, 3*j + 2, Math.signum(data.get(i).leftVelocities[i]));
+            Xs_v.set(i, 0, Math.signum(data.get(i).leftVelocities[0])); // assume first velocity is representative (probably is)
+            Xs_v.set(i, 1, Math.signum(data.get(i).rightVelocities[0])); // assume first velocity is representative (probably is)
 
-                Xs_v.set(i, 3*(j + motorsPerSide) + 1, data.get(i).rightVelocities[j]);
-                Xs_v.set(i, 3*(j + motorsPerSide) + 1, data.get(i).rightVolts[j]);
-                Xs_v.set(i, 3*(j + motorsPerSide) + 2, Math.signum(data.get(i).rightVelocities[i]));
+            for (int j = 0; j < motorsPerSide; j++) {
+                Xs_v.set(i, 2 + 2*j + 0, data.get(i).leftVelocities[j]);
+                Xs_v.set(i, 2 + 2*j + 1, data.get(i).leftVolts[j]);
+
+                Xs_v.set(i, 2 + 2*(j + motorsPerSide) + 0, data.get(i).rightVelocities[j]);
+                Xs_v.set(i, 2 + 2*(j + motorsPerSide) + 1, data.get(i).rightVolts[j]);
 
                 Y_left[j] .set(i, 0, data.get(i + 1).leftVelocities[j]);
                 Y_right[j].set(i, 0, data.get(i + 1).rightVelocities[j]);
@@ -69,6 +70,36 @@ public class Analyze {
 
             leftR2s[j]  = left. getR2();
             rightR2s[j] = right.getR2();
+        }
+
+        int n = motorsPerSide * 2;
+        SimpleMatrix Ad = new SimpleMatrix(motorsPerSide, motorsPerSide);
+        SimpleMatrix Bd = new SimpleMatrix(motorsPerSide, motorsPerSide);
+        // a matrix to keep information about friction forces
+        SimpleMatrix Fd = new SimpleMatrix(motorsPerSide, 2);
+
+        for (int i = 0; i < motorsPerSide; i++) {
+            Fd.set(i, 0, leftSolutions[i].get(0));
+            Fd.set(i, 1, leftSolutions[i].get(1));
+
+
+            Fd.set(i + motorsPerSide, 0, rightSolutions[i].get(0));
+            Fd.set(i + motorsPerSide, 1, rightSolutions[i].get(1));
+            
+            for (int j = 0; j < motorsPerSide; j++) {
+                Ad.set(i, j, leftSolutions[i].get(2 + 2*j));
+                Bd.set(i, j, leftSolutions[i].get(2 + 2*j + 1));
+
+                Ad.set(i, j, leftSolutions[i].get(2 + 2*motorsPerSide + 2*j));
+                Bd.set(i, j, leftSolutions[i].get(2 + 2*motorsPerSide + 2*j + 1));
+
+
+                Ad.set(motorsPerSide + i, j, rightSolutions[i].get(2 + 2*j));
+                Bd.set(motorsPerSide + i, j, rightSolutions[i].get(2 + 2*j + 1));
+
+                Ad.set(motorsPerSide + i, j, rightSolutions[i].get(2 + 2*motorsPerSide + 2*j));
+                Bd.set(motorsPerSide + i, j, rightSolutions[i].get(2 + 2*motorsPerSide + 2*j + 1));
+            }
         }
     }
 

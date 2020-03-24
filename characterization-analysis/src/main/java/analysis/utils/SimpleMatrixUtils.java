@@ -8,7 +8,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package analysis;
+package analysis.utils;
 
 import java.util.function.BiFunction;
 
